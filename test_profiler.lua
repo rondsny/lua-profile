@@ -1,5 +1,3 @@
-local profiler = require "profiler"
-
 local function deep2(c)
     if c < 0 then
         return
@@ -54,6 +52,16 @@ local function nono(a, b)
 end
 
 local start_time = os.clock()
+
+local profiler
+local arg = ...
+if arg=="1" then
+    print("use profiler_pure_lua")
+    profiler = require "profiler_pure_lua"
+elseif arg=="2" then
+    print("use c unction")
+    profiler = require "profiler"
+end
 profiler.start()
 
 foo(11, 22)
@@ -61,6 +69,5 @@ for i=1,10 do
     nono(11, 22)
 end
 
-profiler.stop()
-
 print("total time is", os.clock() - start_time)
+profiler.stop()

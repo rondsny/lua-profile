@@ -47,7 +47,7 @@ function M.start()
     debug.sethook(function(hook_type)
         local now = _gettime()
         local func_info = getinfo(2, 'nSl')
-        if hook_type == 'call' or hook_type == 'tail call' then
+        if hook_type == 'call' then
             local stack = {
                 name         = func_info.name or "anonymous",
                 line         = func_info.linedefined or 0,
@@ -100,7 +100,7 @@ function M.stop()
         if percent < 0 then
             break
         end
-        print(string.format("%6.10f, %6.2f%%, %7d, %s", record.total_time/2000000000,
+        print(string.format("%6.10f, %6.2f%%, %7d, %s", record.total_time,
             percent, record.call_count, _func_title(record)))
     end
     -- print("======== trace_use_time ==========", trace_use_time)

@@ -2,9 +2,10 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
-#ifdef _WIN32
-#include <windows.h>
 
+#ifdef _WIN32
+
+#include <windows.h>
 static double get_high_precision_time() {
     FILETIME filetime;
     GetSystemTimeAsFileTime(&filetime);
@@ -17,9 +18,15 @@ static double get_high_precision_time() {
     return time;
 }
 
-#elif defined(__unix__) || defined(__APPLE__)
-#include <sys/time.h>
+#elif RDTSC
+#include "rdtsc.h"
+static inline double get_high_precision_time() {
+    return (double)rdtsc() / (2000000000);
+}
 
+#elif defined(__unix__) || defined(__APPLE__)
+
+#include <sys/time.h>
 static double get_high_precision_time() {
     struct timeval tv;
     gettimeofday(&tv, NULL);
@@ -28,7 +35,7 @@ static double get_high_precision_time() {
 }
 
 #else
-// 不支持的平台
+
 static double get_high_precision_time() {
     return -1;
 }
